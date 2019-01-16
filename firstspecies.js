@@ -291,7 +291,7 @@ class Counterpoint {
     }
 
     if (this.index > 0 && this.index < this.penult) {
-      //prefer more imperfect to perfect intervals,
+      // prefer more imperfect to perfect intervals,
       // because more interesting
       let choices
       if (this.count_perfect > this.count_imperfect) {
@@ -348,7 +348,7 @@ class Counterpoint {
 
       let results = []
       choices.forEach(choice => {
-            k = this.copy() // copy.deepcopy(this)
+            let k = this.copy() // copy.deepcopy(this)
             k.cp[k.index] = choice
             k.count_perfect += 1
             k.index += 1
@@ -366,50 +366,62 @@ class Counterpoint {
   }
 }
 
-function main (cf) {
-  /* Given a cantus firmus, generate all possible two-voice
-     first species counterpoints subject to Fux' rules (hard rules
-     implemented; soft rules only partially: tries for more imperfect
-     than perfect consonances, but does not avoid skips or try to
-     keep the line balanced.
+// Given a cantus firmus, generate all possible two-voice
+// first species counterpoints subject to Fux' rules (hard rules
+// implemented; soft rules only partially: tries for more imperfect
+// than perfect consonances, but does not avoid skips or try to
+// keep the line balanced.
 
-     Prints the generated counterpoints with a count in front as a
-     diagnostic in case a bug causes dups. Expect output of the form
-       N x x x x x
-       N x y x x y
-     and if any of the N's is > 1 there was a dup and therefore a bug.*/
+// generate_next should eventually generate all possible counterpoints.
+// generated_counterpoints is a hash { counterpoint: count } where
+// counterpoint is a string rep of the cp, eg "C D E C ...". If the
+// count is greater than one, a bug caused a dup to be generated.
 
-  cfs = {}
-  k = new Counterpoint(cf, ABOVE, d_dorian)
-  agenda = new Agenda("depth-first")
-  agenda.put(k)
-  while (!agenda.empty()) {
-    k = agenda.get()
-    result = k.next()
-    if (result === false) {
-      // print "FAILED"
-      pass
-    } else if (result === true) {
-      // print("DONE")
-      cf_in_dorian = k.cf.map(n => note_in_dorian(n))
-      cp_in_dorian = k.cp.map(n => note_in_dorian(n))
-      cf = cp_in_dorian.join(' ')
-      if (cfs.hasOwnProperty[cf]) {
-        cfs[cf] += 1
-      } else {
-        cfs[cf] = 1
-      }
-    } else {
-      result.forEach(r => agenda.put(r))
-    }
+class Composer {
+  constructor(cantus_firmus) {
+    this.generated_counterpoints = {}
+    this.agenda = new Agenda("depth-first")
+    this.cf = cantus_firmus
+    let cp = new Counterpoint(this.cf, ABOVE, d_dorian)
+    this.agenda.put(cp)
   }
-  for (let key in cfs) {
-    //console.log(`${cfs[key]}, ${key}`)
+
+  generate_next () {
+    while (!this.agenda.empty()) {
+      let k = this.agenda.get()
+      let result = k.next()
+      if (result === false) {
+        return null
+      } else if (result === true) {
+        let cf_in_dorian = k.cf.map(n => note_in_dorian(n))
+        let cp_in_dorian = k.cp.map(n => note_in_dorian(n))
+        let cp = cp_in_dorian.join(' ')
+        if (this.generated_counterpoints.hasOwnProperty[cp]) {
+          this.generated_counterpoints[cp] += 1
+        } else {
+          this.generated_counterpoints[cp] = 1
+        }
+        return cp
+      } else {
+        result.forEach(r => this.agenda.put(r))
+      }
+    }
   }
 }
 
-function firstspecies_test () {
-  let cf = [d, f, e, d, g, f, a, g, f, e, d].map(n => [n, 4])
-  // cf = [(n, 4) for n in [d, e, d]]
-  main (cf)
+let composer;
+
+function firstspecies_start() {
+  //let composer = new Composer([d, f, e, d, g, f, a, g, f, e, d].map(n => [n, 4]))
+  composer = new Composer([d, e, d].map(n => [n, 4]))
+  firstspecies_next();
+}
+
+function firstspecies_next () {
+  let cp = composer.generate_next()
+  if (cp === null) {
+    console.log("failed")
+  } else {
+    console.log(cp)
+  }
 }

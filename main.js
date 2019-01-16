@@ -64,12 +64,16 @@ function placeTune(voice, tune) {
 }
 
 let scale = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"]
-let cf = ["D4", "F4", "E4", "D4", "G4", "F4", "A4", "G4", "F4", "E4", "D4"]
-placeTune(voice1, cf);
+let c_f = ["D4", "F4", "E4", "D4", "G4", "F4", "A4", "G4", "F4", "E4", "D4"]
+placeTune(voice1, c_f);
 placeTune(voice2, scale);
 
-document.getElementById("play_btn").addEventListener("click", event => {
-  firstspecies_test();
+document.getElementById("start_btn").addEventListener("click", event => {
+  firstspecies_start();
+});
+
+document.getElementById("next_btn").addEventListener("click", event => {
+  firstspecies_next();
 });
 
 /*
