@@ -1,5 +1,5 @@
 body {
-  font-family: Futura, Helvetica, Arial, sans-serif;
+  font-family: Futura, Helvetica Arial, sans-serif;
   background-color: #0B0C10;
   color: #C5C6C7;
 }
@@ -12,12 +12,23 @@ a {
   color: #66FCF1;
 }
 
-#voice1, #voice2 {
+header {
+  font-size: 24pt;
+  margin-bottom: 1em;
+}
+
+#score {
+  position: absolute;
   width: 100%;
-  background-color: orange;
+}
+
+.voice {
+  position: absolute;
+  width: 100%;
 }
 
 .staffline {
+  position: absolute;
   height: 1px;
   border: 0;
   margin: 10px 0 0 0;
@@ -26,27 +37,9 @@ a {
   background-color: white;
 }
 
-.betweenstaves {
-  height: 50px;
-}
-
 .note {
   position: absolute;
-}
-
-#note1 {
-  left: 200px;
-  top: 200px;
-}
-
-#note2 {
-  left: 250px;
-  top: 212px;
-}
-
-#note3 {
-  left: 300px;
-  top: 223px;
+  font-size: 11pt;
 }
 
 .clef {
@@ -55,32 +48,16 @@ a {
   padding: 0;
   position: absolute;
   font-size: 30pt;
-  /*top: 100px;*/
-  left: 15px;
   z-index: 2;
 }
-#container {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
 
-#board{
-  border-collapse: collapse;
-}
-
-#board td{
-  border: 1px solid #C5C6C7;
-  width: 18px;
-  height: 18px;
-}
-
-td.alive {
-  background-color: #66FCF1;
-}
-
-#control_panel {
+#controls {
+  position: absolute;
   margin: 10px 0 50px 0;
+}
+
+footer {
+  position: absolute;
 }
 
 .button {
@@ -99,29 +76,4 @@ td.alive {
 
 .button:focus {
   outline: dashed 1px #C5C6C8;
-}
-#container {
-  position: relative;
-  /*top: 100px;
-  left: 100px;*/
-  width: 100%;
-  height: auto;
-  border: 1px solid white;
-}
-#moo {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  height: 100px;
-  width: 100px;
-  background-color: white;
-}
-
-#meow {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  height: 100px;
-  width: 100px;
-  background-color: orange;
 }

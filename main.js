@@ -1,6 +1,82 @@
+function createStaff(name, top, clef) {
+  let voice = document.createElement("div")
+  voice.classList.add("voice")
+  voice.id = name;
+  voice.style.top = top
+  let score = document.getElementById("score")
+  score.appendChild(voice);
+  for(let i = 0; i < 5; i++) {
+    let staffline = document.createElement("div")
+    staffline.classList.add("staffline")
+    staffline.style.top = `${i*10}px`;
+    voice.appendChild(staffline)
+  }
+  let c = document.createElement("div")
+  c.classList.add("clef")
+  c.innerText = clef
+  if (clef === "G") {
+    c.style.left = "9px"
+    c.style.top = "10px"
+  } else {
+    c.style.left = "15px"
+    c.style.top = "-3px"
+  }
+  voice.appendChild(c)
+  return voice;
+}
+
+const voice1 = createStaff("voice1", "0px", "G")
+const voice2 = createStaff("voice2", "80px", "F")
+document.getElementById("controls").style.top = "225px"
+document.getElementsByTagName("footer")[0].style.top = "300px"
+
+function placeNote(voice, note, dur, left) {
+  const pitchMap = { 'C': 2, 'D': 3, 'E': 4,
+                     'F': 5, 'G': 6, 'A': 7, 'B': 8 }
+  let octave = note[1]
+  note = note[0]
+  let pitch = (octave-1)*7 + pitchMap[note]
+  let top = (33 - pitch) * 5
+  const glyphMap = { 'W': 'O', 'Q': '@', 'E': '@' }
+  let glyph = glyphMap[dur]
+  let d = document.createElement("div")
+  d.classList.add("note")
+  d.innerText = glyph
+  d.style.top = `${top}px`
+  d.style.left = `${left}px`
+  voice.appendChild(d)
+}
+
+/*
+placeNote(voice1, "C6", "W", 40) // 37 -40
+placeNote(voice1, "F5", "W", 70) // 33 0
+placeNote(voice1, "C5", "W", 100) // 30 15
+placeNote(voice1, "C4", "W", 130) // 23 50
+placeNote(voice1, "A3", "W", 160) //21 60
+*/
+
+function placeTune(voice, tune) {
+  let left = 40
+  tune.forEach((note) => {
+    placeNote(voice, note, "W", left)
+    left += 30
+  })
+}
+
+let scale = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"]
+let cf = ["D4", "F4", "E4", "D4", "G4", "F4", "A4", "G4", "F4", "E4", "D4"]
+placeTune(voice1, cf);
+placeTune(voice2, scale);
+
+document.getElementById("play_btn").addEventListener("click", event => {
+  firstspecies_test();
+});
+
+/*
 document.getElementById("voice1").addEventListener("click", event => {
   console.log(event.target, event);
 });
+*/
 
 /* staff_position = (-n... 0 ... n) where 0 is the
    bottom-most line, 1 the space above it, 8 the top-
@@ -8,12 +84,12 @@ document.getElementById("voice1").addEventListener("click", event => {
    etc. So in G clef, -2 = middle C, 8 if F5, 12 is
    high C.
 
-   note_type is duration 'w' = whole note, (h)alf,
+   noteType is duration 'w' = whole note, (h)alf,
    (q)uarter, (e)ighth */
-
-function place_note(staff_position, note_type) {
+/*
+function placeNote(staffPosition, noteType) {
   let glyph;
-  switch (note_type) {
+  switch (noteType) {
     case 'w':
     case 'h': glyph = 'O'; break;
     case 'q':
@@ -28,8 +104,8 @@ function place_note(staff_position, note_type) {
   a.style.top = "200px";
   a.style.left = "200px";
 }
-
-place_note(1, 'w');
+*/
+//placeNote(1, 'w');
 
 /*
 
