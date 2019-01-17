@@ -1,3 +1,10 @@
+describe('ABC parser', function() {
+  it('can parse a string to an array of notes', function() {
+    let abc = "c#' d' eb' f a, a2"
+    expect( parseABCtoNotes(abc) ).toEqual ([[cs, 5], [d, 5], [eb, 5], [f, 4], [a, 3], [a, 2]])
+  })
+})
+
 describe('Queue', function() {
   it('creates an empty queue', function() {
     let d = new Deque();

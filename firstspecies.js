@@ -1,95 +1,50 @@
-class Deque {
-  constructor() {
-    this.q = []
-  }
-
-  empty() {
-    return this.q.length === 0
-  }
-
-  append (v) {
-    this.q.push(v)
-  }
-
-  pop (v) {
-    if (this.q.length === 0) {
-      throw "Pop empty queue"
-    }
-    return this.q.pop()
-  }
-
-  appendleft(v) {
-    this.q.unshift(v);
-  }
-
-  popleft(v) {
-    if (this.q.length === 0) {
-      throw "Popleft empty queue"
-    }
-    return this.q.shift();
-  }
-}
-
-class Agenda {
-  /* An agenda can be used for depth-first, breadth-first or
-     other state-space searches. An agenda has the following
-     properties:
-
-     Methods:
-       constructore(policy="breadth-first" or "depth-first")
-       put(state): add state to the agenda.
-       get(): remove and return the next state. Throws exception if empty.
-       empty(): true if empty, false if at least one state available.
-  */
-
-  constructor (policy = "breadth-first") {
-    /* Return an Agenda of policy 'bf' for breadth first and
-       'df' for depth first. Raises ValueError for invalid policy */
-
-    this.BREADTH_FIRST = 1
-    this.DEPTH_FIRST = 2
-
-    if (policy === "breadth-first") {
-      this.policy = this.BREADTH_FIRST
-    } else if (policy === "depth-first") {
-       this.policy = this.DEPTH_FIRST
-    } else {
-      throw `Agenda invalid policy argument ${policy}: can be 'breadth-first' or 'depth-first'`
-    }
-    this.q = new Deque()
-  }
-
-  /* TODO
-    def __repr__(this):
-      return "<Agenda: {} {}>\n".format(len(this.q), this.q)
-  */
-
-  put (state) {
-    /* Add state to agenda. */
-    this.q.appendleft(state)
-  }
-
-  get () {
-    /* Remove and return the next state according to policy.
-       Throw `Get from empty agenda` if agenda is empty */
-    if (this.empty()) {
-      throw `Get from an empty Agenda`
-    }
-    if (this.policy === this.BREADTH_FIRST) {
-      return this.q.pop()
-    } else {
-      return this.q.popleft()
-    }
-  }
-
-  empty () {
-    return this.q.empty()
-  }
-}
-
 // Relative pitches: half-steps above c
 
-const [c, d, e, f, g, a, b] = [0, 2, 4, 5, 7, 9, 11]
+const [c, cs, db, d, ds, eb,
+       e, es, fb, f, fs, gb,
+       g, gs, ab, a, as, bb,
+       b, cb] =
+      [0,  1,  1, 2, 3,  3,
+       4,  5,  4, 5,  6,  6,
+       7,  8,  8, 9, 10, 10,
+       11, 11]
+
+const ABCtoNote = {
+  'c': c, 'cs': cs, 'c#': cs, 'db': db, 'd': d, 'ds': ds, 'd#': ds, 'eb': eb,
+  'e': e, 'es': es, 'e#': es, 'fb': db, 'f': f, 'fs': fs, 'f#': fs, 'gb': gb,
+  'g': g, 'gs': gs, 'g#': gs, 'ab': ab, 'a': a, 'as': as, 'a#': as, 'bb': bb,
+  'b': b, 'cb': cb
+}
+
+function parseABCtoNotes(abc) {
+  // "c#' d' eb' f a, a2" -> [[cs, 5], [d, 5], [eb, 5], [f, 4], [a, 3], [a, 2]]
+  let notes = abc.split(' ');
+  return notes.map(n => parseOneABCtoNote(n))
+}
+
+function parseOneABCtoNote(abc) {
+  // todo Error checking
+  abc = abc.toLowerCase();
+  let pitch
+  let octave
+  switch (abc.length) {
+    case 1:
+      pitch = abc.charAt(0)
+      octave = 4
+      break
+    case 2:
+      pitch = abc.charAt(0)
+      octave = abc.charAt(1)
+      break
+    case 3:
+      pitch = abc.slice(0,2)
+      octave = abc.charAt(2)
+  }
+  pitch = ABCtoNote[pitch]
+  if (octave === "'") { octave = "5" }
+  else if (octave === ",") { octave = "3" }
+  return [pitch, +octave]
+}
 
 // The relative pitches of the dorian mode starting on D
 //
@@ -98,8 +53,8 @@ const d_dorian = [2, 4, 5, 7, 9, 11, 12]  //14 16 17 19 21 23 24
 
 // The note names of dorian for printing results
 
-notes_in_dorian = ["c", "c#", "d", "d#", "e", "f",
-                   "f#", "g", "g#", "a", "a#", "b", "c"]
+const notes_in_dorian = ["c", "c#", "d", "d#", "e", "f",
+                         "f#", "g", "g#", "a", "a#", "b", "c"]
 
 function note_in_dorian (n) {
 
@@ -391,7 +346,7 @@ class Composer {
       let k = this.agenda.get()
       let result = k.next()
       if (result === false) {
-        return null
+        return false
       } else if (result === true) {
         let cf_in_dorian = k.cf.map(n => note_in_dorian(n))
         let cp_in_dorian = k.cp.map(n => note_in_dorian(n))
@@ -406,22 +361,30 @@ class Composer {
         result.forEach(r => this.agenda.put(r))
       }
     }
+    return null
   }
 }
 
 let composer;
 
-function firstspecies_start() {
-  //let composer = new Composer([d, f, e, d, g, f, a, g, f, e, d].map(n => [n, 4]))
-  composer = new Composer([d, e, d].map(n => [n, 4]))
-  firstspecies_next();
+function firstspecies_start(cantus_firmus) {
+  // TODO - translate cantus firmus into note types
+  composer = new Composer([d, f, e, d, g, f, a, g, f, e, d].map(n => [n, 4]))
+  //composer = new Composer([d, e, d].map(n => [n, 4]))
+  let cp = firstspecies_next()
+  return cp
 }
 
 function firstspecies_next () {
   let cp = composer.generate_next()
-  if (cp === null) {
+  if (cp === false) {
     console.log("failed")
+    return null
+  } else if (cp === null) {
+    console.log("no more")
+    return null
   } else {
     console.log(cp)
+    return cp
   }
 }

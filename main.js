@@ -1,7 +1,38 @@
+const voice1 = createStaff("voice1", "0px", "G")
+const voice2 = createStaff("voice2", "80px", "G")
+document.getElementById("controls").style.top = "225px"
+document.getElementsByTagName("footer")[0].style.top = "300px"
+
+let cf_for_display = "d4 f4 e4 d4 g4 f4 a4 g4 f4 e4 d4"
+let cf = ["D4", "F4", "E4", "D4", "G4", "F4", "A4", "G4", "F4", "E4", "D4"]
+placeTune(voice2, cf_for_display);
+
+document.getElementById("start_btn").addEventListener("click", event => {
+  document.getElementById('message').innerText = ''
+  let cp = firstspecies_start(cf)
+  updateDisplay(cp)
+});
+
+document.getElementById("next_btn").addEventListener("click", event => {
+  document.getElementById('message').innerText = ''
+  let cp = firstspecies_next()
+  updateDisplay(cp)
+});
+
+function updateDisplay(cp) {
+  if (cp === false) {
+    document.getElementById('message').innerText = 'I made a mistake in the counterpoint :('
+  } else if (cp === null) {
+    document.getElementById('message').innerText = 'That\'s all I could think of.'
+  } else {
+    placeTune(voice1, cp)
+  }
+}
+
 function createStaff(name, top, clef) {
   let voice = document.createElement("div")
   voice.classList.add("voice")
-  voice.id = name;
+  voice.id = name
   voice.style.top = top
   let score = document.getElementById("score")
   score.appendChild(voice);
@@ -25,20 +56,37 @@ function createStaff(name, top, clef) {
   return voice;
 }
 
-const voice1 = createStaff("voice1", "0px", "G")
-const voice2 = createStaff("voice2", "80px", "F")
-document.getElementById("controls").style.top = "225px"
-document.getElementsByTagName("footer")[0].style.top = "300px"
-
 function placeNote(voice, note, dur, left) {
+  // adjust the notation, because the library returns something different to what the UI expects
+  // c#' -> C5, accidental <- '#'
+  // db, -> D3, accidental <- 'b'
+  // d   -> D4, accidental <- null
+  // e4  -> E4, accidental <- null
+
+  let base = note.charAt(0).toUpperCase()
+  let accidental = null
+  let octave = 4
+  if (note.length === 2) {
+    octave = note.charAt(1)
+  }
+  if (note.length === 3) {
+    accidental = note.charAt(1)
+    octave = note.charAt(2)
+  }
+  if (octave === "'") { octave = "5" }
+  else if (octave === ",") { octave = "3" }
+
+  // find the staff line or space on which to display the note
+  // TODO - parameterize the magic numbers 33 and 5 so we can change the display
+
   const pitchMap = { 'C': 2, 'D': 3, 'E': 4,
                      'F': 5, 'G': 6, 'A': 7, 'B': 8 }
-  let octave = note[1]
-  note = note[0]
-  let pitch = (octave-1)*7 + pitchMap[note]
+
+  let pitch = (octave-1)*7 + pitchMap[base]
   let top = (33 - pitch) * 5
   const glyphMap = { 'W': 'O', 'Q': '@', 'E': '@' }
   let glyph = glyphMap[dur]
+  if (accidental !== null) { glyph = `${accidental}${glyph}` }
   let d = document.createElement("div")
   d.classList.add("note")
   d.innerText = glyph
@@ -46,6 +94,24 @@ function placeNote(voice, note, dur, left) {
   d.style.left = `${left}px`
   voice.appendChild(d)
 }
+
+function placeTune(voice, tune) {
+  let notes = voice.getElementsByClassName("note")
+  let len = notes.length-1
+  for(let i = len; i >= 0; --i) { notes[i].remove() }
+  let left = 40
+  tune.split(' ').forEach((note) => {
+    placeNote(voice, note, "W", left)
+    left += 30
+  })
+}
+
+/*
+const voice1 = createStaff("voice1", "0px", "G")
+const voice2 = createStaff("voice2", "80px", "F")
+document.getElementById("controls").style.top = "225px"
+document.getElementsByTagName("footer")[0].style.top = "300px"
+*/
 
 /*
 placeNote(voice1, "C6", "W", 40) // 37 -40
@@ -55,26 +121,13 @@ placeNote(voice1, "C4", "W", 130) // 23 50
 placeNote(voice1, "A3", "W", 160) //21 60
 */
 
-function placeTune(voice, tune) {
-  let left = 40
-  tune.forEach((note) => {
-    placeNote(voice, note, "W", left)
-    left += 30
-  })
-}
+/*
 
 let scale = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"]
 let c_f = ["D4", "F4", "E4", "D4", "G4", "F4", "A4", "G4", "F4", "E4", "D4"]
 placeTune(voice1, c_f);
 placeTune(voice2, scale);
-
-document.getElementById("start_btn").addEventListener("click", event => {
-  firstspecies_start();
-});
-
-document.getElementById("next_btn").addEventListener("click", event => {
-  firstspecies_next();
-});
+*/
 
 /*
 document.getElementById("voice1").addEventListener("click", event => {
