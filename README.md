@@ -19,14 +19,8 @@ I thought this would be a fun topic to motivate learning DOM manipulation, so I'
 
 As a real app, the music would be displayed on a canvas or via SVG, and I really need to add audio output...!
 
-## TODO
+## Fux
 
-1. Something better for clefs
-2. Ledger lines
-3. Stems (and later, when eigth notes are allowed, flags)
-4. Staff wrap
-5. Staff resize
-6. User-supplied melody
-7. User-supplied counterpoint, program acts as rule-checker
-8. ... bluesky ... musical counterpoints (the soft rules)
-9. ... bluesky ... judging counterpoints as more or less satifsfying (this is art and psychology, maybe machine learning and statistics...?)
+The Fux library generates music.
+DOM.ui was an experiment in displaying music with DOM alone
+VEX.ui is based on VexFlow

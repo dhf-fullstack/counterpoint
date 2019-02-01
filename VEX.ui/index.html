@@ -1,0 +1,116 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>First species counterpoint</title>
+  <link rel="stylesheet" href="static/main.css">
+  <!-- TODO modules -->
+  <script src="../fux/deque.js" defer></script>
+  <script src="../fux/agenda.js" defer></script>
+  <script src="../fux/firstspecies.js" defer></script>
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <header>First species counterpoint</header>
+
+  <section id="score1"></section>
+  <section id="errors"></section>
+
+  <section id="controls">
+    <button id='new_cf_btn' class='button'>New Cantus Firmus</button>
+    <button id='start_btn' class='button'>Start</button>
+    <button id='next_btn' class='button'>Next</button>
+    <div id='message'></div>
+  </section>
+
+  <footer>
+    <p>by David H.Friedman at <a href="http://www.fullstackacademy.com/">Fullstack Academy</a></p>
+  </footer>
+</body>
+<script type="text/javascript" src="static/vexflow-min.js"></script>
+<script type="text/javascript">
+  try {
+    const width = 700
+
+    // boilerplate
+    const VF = Vex.Flow
+    const div = document.getElementById('score1')
+    const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG)
+    renderer.resize(2*width, 200)
+    const context = renderer.getContext()
+
+    // customize
+    context.setFont('Arial', 10, '').setBackgroundFillStyle('#eed')
+
+    // Staff
+    const stave = new VF.Stave(10, 40, width)
+    stave.addClef('treble').addTimeSignature('4/4')
+
+    // render
+    stave.setContext(context).draw()
+
+    /* Create a voice in 4/4 and add notes
+    var voice = new VF.Voice({num_beats: 4,  beat_value: 4});
+    voice.addTickables([
+      new VF.StaveNote({clef: "treble", keys: ["c/4"], duration: "q" }),
+      new VF.StaveNote({clef: "treble", keys: ["d/4"], duration: "q" }),
+      new VF.StaveNote({clef: "treble", keys: ["e/4"], duration: "q" }),
+      new VF.StaveNote({clef: "treble", keys: ["f/4"], duration: "q" }),
+    ])
+    var formatter = new VF.Formatter().joinVoices([voice]).format([voice], width);
+    // Render voice
+    voice.draw(context, stave);
+    */
+    /*
+    var notes = [
+      new VF.StaveNote({clef: "treble", keys: ["c/5"], duration: "q" }),
+      new VF.StaveNote({clef: "treble", keys: ["d/4"], duration: "q" }),
+      new VF.StaveNote({clef: "treble", keys: ["b/4"], duration: "qr" }),
+      new VF.StaveNote({clef: "treble", keys: ["c/4", "e/4", "g/4"], duration: "q" })
+    ];
+
+    var notes2 = [
+      new VF.StaveNote({clef: "treble", keys: ["c/4"], duration: "w" })
+    ];
+
+    var voices = [
+      new VF.Voice({num_beats: 4, beat_value: 4}).addTickables(notes),
+      new VF.Voice({num_beats: 4, beat_value: 4}).addTickables(notes2)
+    ];
+
+    var formatter = new VF.Formatter().joinVoices(voices).format(voices, width);
+    voices.forEach(function(v) { v.draw(context, stave) });
+    */
+
+    var notes = [
+      new VF.StaveNote({clef: "treble", keys: ["d/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["f/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["e/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["d/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["g/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["f/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["a/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["g/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["f/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["e/4"], duration: "h" }),
+      new VF.StaveNote({clef: "treble", keys: ["d/4"], duration: "w" }),
+    ];
+
+    /*var notes2 = [
+      new VF.StaveNote({clef: "treble", keys: ["c/4"], duration: "w" })
+    ];*/
+
+    var voices = [
+      new VF.Voice({num_beats: 12, beat_value: 2}).addTickables(notes),
+      //new VF.Voice({num_beats: 4, beat_value: 4}).addTickables(notes2)
+    ];
+
+    var formatter = new VF.Formatter().joinVoices(voices).format(voices, width);
+    voices.forEach(function(v) { v.draw(context, stave) });
+
+  } catch (err) {
+    errors.innerText = err
+  }
+</script>
+</html>
