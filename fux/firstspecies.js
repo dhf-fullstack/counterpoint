@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // Relative pitches: half-steps above c
 
 const [c, cs, db, d, ds, eb,
@@ -19,10 +20,25 @@ const ABCtoNote = {
 function parseABCtoNotes(abc) {
   // "c#' d' eb' f a, a2" -> [[cs, 5], [d, 5], [eb, 5], [f, 4], [a, 3], [a, 2]]
   let notes = abc.split(' ');
-  return notes.map(n => parseOneABCtoNote(n))
+  return notes.map(n => parseOneABC.to.note(n))
 }
 
-function parseOneABCtoNote(abc) {
+function parseABCtoVexNotes(abc) {
+  // "c#' d' eb' f a, a2" -> [[cs, 5], [d, 5], [eb, 5], [f, 4], [a, 3], [a, 2]]
+  let notes = abc.split(' ');
+  return notes.map(n => parseOneABC.to.vexnote(n))
+}
+
+const parseOneABC = {
+  to: { note: (str) => parseOneABCAux(str, (pitch, octave) => [ABCtoNote[pitch], octave] ), // ("c#", 5) => [cs, 5]
+        vexnote: (str) => parseOneABCAux(str, (pitch, octave) => ABCtoVexNote(pitch, octave)) } // ("c#, 5) => "C#/5"
+}
+
+function ABCtoVexNote(pitch, octave) {
+  return [[`${pitch.toUpperCase()}/${octave}`], "w"]
+}
+
+function parseOneABCAux(abc, f) {
   // todo Error checking
   abc = abc.toLowerCase();
   let pitch
@@ -40,10 +56,9 @@ function parseOneABCtoNote(abc) {
       pitch = abc.slice(0,2)
       octave = abc.charAt(2)
   }
-  pitch = ABCtoNote[pitch]
   if (octave === "'") { octave = "5" }
   else if (octave === ",") { octave = "3" }
-  return [pitch, +octave]
+  return f(pitch, +octave)
 }
 
 // The relative pitches of the dorian mode starting on D
