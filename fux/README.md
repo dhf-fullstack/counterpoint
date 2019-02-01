@@ -13,14 +13,9 @@ I started learning counterpoint from Johann Joseph Fux's venerable textbook. (Th
 
 According to the script, there are 17988 counterpoints lines above the cantus firmus "d f e d g f a g f e d"...
 
-## Fullstack Academy project
+## TODO
 
-I thought this would be a fun topic to motivate learning DOM manipulation, so I'm putting a divs-and-text UI around the generating script.
-
-As a real app, the music would be displayed on a canvas or via SVG, and I really need to add audio output...!
-
-## Fux
-
-The Fux library generates music.
-DOM.ui was an experiment in displaying music with DOM alone
-VEX.ui is based on VexFlow
+1. User-supplied melody
+2. User-supplied counterpoint, program acts as rule-checker
+3. ... bluesky ... musical counterpoints (the soft rules)
+4. ... bluesky ... judging counterpoints as more or less satifsfying (this is art and psychology, maybe machine learning and statistics...?)

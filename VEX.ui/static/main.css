@@ -1,0 +1,79 @@
+body {
+  font-family: Futura, Helvetica Arial, sans-serif;
+  //background-color: #0B0C10;
+  //color: #C5C6C7;
+}
+
+h1 {
+  font-weight: normal;
+}
+
+a {
+  //color: #66FCF1;
+}
+
+header {
+  font-size: 24pt;
+  margin-bottom: 1em;
+}
+
+#score {
+  position: absolute;
+  width: 100%;
+}
+
+.voice {
+  position: absolute;
+  width: 100%;
+}
+
+.staffline {
+  position: absolute;
+  height: 1px;
+  border: 0;
+  margin: 10px 0 0 0;
+  padding: 0;
+  width: 100%;
+  background-color: white;
+}
+
+.note {
+  position: absolute;
+  font-size: 11pt;
+}
+
+.clef {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  position: absolute;
+  font-size: 30pt;
+  z-index: 2;
+}
+
+#controls {
+  //position: absolute;
+  margin: 10px 0 50px 0;
+}
+
+footer {
+  //position: absolute;
+}
+
+.button {
+  padding: 0.85em 1em;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  font-size: 0.9em;
+  text-align: center;
+  color: #1F2833;
+  background-color: #C5C6C8;
+}
+
+.button:hover, .button:focus {
+  background-color: #eeeeee; // #3e5065;
+}
+
+.button:focus {
+  outline: dashed 1px #C5C6C8;
+}
