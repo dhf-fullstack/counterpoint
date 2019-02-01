@@ -1,15 +1,17 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const voice1 = createStaff("voice1", "0px", "G")
 const voice2 = createStaff("voice2", "80px", "G")
 document.getElementById("controls").style.top = "225px"
 document.getElementsByTagName("footer")[0].style.top = "300px"
 
-document.getElementById("new_cf_btn").addEventListener("click", event => {
+document.getElementById("new_cf_btn").addEventListener("click", () => {
   document.getElementById('message').innerText = ''
   clearVoice(voice1)
   clearVoice(voice2)
 });
 
-document.getElementById("start_btn").addEventListener("click", event => {
+document.getElementById("start_btn").addEventListener("click", () => {
   document.getElementById('message').innerText = ''
   let cf_for_display = "d4 f4 e4 d4 g4 f4 a4 g4 f4 e4 d4"
   let cf = ["D4", "F4", "E4", "D4", "G4", "F4", "A4", "G4", "F4", "E4", "D4"]
@@ -18,7 +20,7 @@ document.getElementById("start_btn").addEventListener("click", event => {
   updateDisplay(cp)
 });
 
-document.getElementById("next_btn").addEventListener("click", event => {
+document.getElementById("next_btn").addEventListener("click", () => {
   document.getElementById('message').innerText = ''
   let cp = firstspecies_next()
   updateDisplay(cp)
@@ -62,7 +64,8 @@ function createStaff(name, top, clef) {
   return voice;
 }
 
-function voiceClickHandler(ev) {
+// eslint-disable-next-line no-unused-vars
+function voiceClickHandler(_ev) {
   // this is the voice
 }
 
