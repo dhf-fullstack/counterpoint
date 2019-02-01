@@ -3,12 +3,17 @@ const voice2 = createStaff("voice2", "80px", "G")
 document.getElementById("controls").style.top = "225px"
 document.getElementsByTagName("footer")[0].style.top = "300px"
 
-let cf_for_display = "d4 f4 e4 d4 g4 f4 a4 g4 f4 e4 d4"
-let cf = ["D4", "F4", "E4", "D4", "G4", "F4", "A4", "G4", "F4", "E4", "D4"]
-placeTune(voice2, cf_for_display);
+document.getElementById("new_cf_btn").addEventListener("click", event => {
+  document.getElementById('message').innerText = ''
+  clearVoice(voice1)
+  clearVoice(voice2)
+});
 
 document.getElementById("start_btn").addEventListener("click", event => {
   document.getElementById('message').innerText = ''
+  let cf_for_display = "d4 f4 e4 d4 g4 f4 a4 g4 f4 e4 d4"
+  let cf = ["D4", "F4", "E4", "D4", "G4", "F4", "A4", "G4", "F4", "E4", "D4"]
+  placeTune(voice2, cf_for_display);
   let cp = firstspecies_start(cf)
   updateDisplay(cp)
 });
@@ -53,7 +58,12 @@ function createStaff(name, top, clef) {
     c.style.top = "-3px"
   }
   voice.appendChild(c)
+  voice.addEventListener('click', voiceClickHandler.bind(voice));
   return voice;
+}
+
+function voiceClickHandler(ev) {
+  // this is the voice
 }
 
 function placeNote(voice, note, dur, left) {
@@ -95,10 +105,14 @@ function placeNote(voice, note, dur, left) {
   voice.appendChild(d)
 }
 
-function placeTune(voice, tune) {
+function clearVoice(voice) {
   let notes = voice.getElementsByClassName("note")
   let len = notes.length-1
   for(let i = len; i >= 0; --i) { notes[i].remove() }
+}
+
+function placeTune(voice, tune) {
+  clearVoice(voice)
   let left = 40
   tune.split(' ').forEach((note) => {
     placeNote(voice, note, "W", left)
